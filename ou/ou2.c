@@ -39,10 +39,11 @@ void readScores(int judges, double scores[]) {
 		scanf("%lf", &scores[i]);
 	}
 }
+
 //prints the scores that the user gave as input
 //DATA IN: the number of judges and the array of scores
 //DATA OUT: the score and which judge gave the score
-void printScores(int judges, double scores[]) {
+void loadedScores(int judges, double scores[]) {
 	printf("\nLoaded scores:\n");
 	for (int i = 0; i < judges; i++)
 	{
@@ -50,71 +51,60 @@ void printScores(int judges, double scores[]) {
 	}
 	
 }
+
 //gets the min and max value of the scores and prints them
 //DATA IN: how many judges and the array of scores they gave
 //DATA OUT: the highest and lowest score given by the judges
-void getScoresExtreme(int n, double scores[]) {
+void getScores(int n, double scores[], double *minScore, double *maxScore, double *avg) {
 	int i;
 	double sum = 0;
-	double avg = 0;
 	double minMaxSum = 0;
-	double minScore = scores[0];
-	double maxScore = scores[0];
+	*minScore = scores[0];
+	*maxScore = scores[0];
 	
 	for ( i = 0; i < n; i++)
 	{
-		if (scores[i] < minScore)
+		if (scores[i] < *minScore)
 		{
-			minScore = scores[i];
+			*minScore = scores[i];
 		}
 
-		if (scores[i] > maxScore)
+		if (scores[i] > *maxScore)
 		{
-			maxScore = scores[i];
+			*maxScore = scores[i];
 		}
-		
-		
 	}
+	for (int i = 0; i < n; i++)
+	{
+		sum = sum + scores[i];
+	}
+	minMaxSum = *maxScore + *minScore;
+	sum = sum - minMaxSum;
+	*avg = sum / (n-2);
+}
+
+//prints the max, min and avg scores "returned" from getScores
+void printScores(double maxScore, double minScore, double avg) {
 	printf("\nFinal result:\n");
 	printf("Highest judge score: %.1lf\n", maxScore);
 	printf("Lowest judge score: %.1lf\n", minScore);
+	printf("Final average score: %.1lf\n", avg);
+}
 
-	
-	for (int i = 0; i < n; i++)
-	{
-		sum = sum + scores[i];
-	}
-	minMaxSum = maxScore + minScore;
-	sum = sum - minMaxSum;
-	avg = sum / (n-2);
-	printf("Final average score: %.1lf\n", avg);
-	
-}
-//calculates the average value from the array of scores
-//DATA IN: how many judges and the array of scores they gave
-//DATA OUT: the average score given by the judges
-void getAverage(int n, double scores[]) {
-	double sum = 0;
-	double avg = 0;
-	for (int i = 0; i < n; i++)
-	{
-		sum = sum + scores[i];
-	}
-	avg = sum / n;
-	printf("Final average score: %.1lf\n", avg);
-	
-}
 //the main function where the functions are run
 int main(void) {
 	int judges;
+	double min = 0;
+	double max = 0;
+	double avg = 0;
 	
 	printInfo();
 
 	judges = getJudges();
 	double scores[judges];
 	readScores(judges, scores);
-	printScores(judges, scores);
-	getScoresExtreme(judges, scores);
-	// getAverage(judges, scores);
+	loadedScores(judges, scores);
+	getScores(judges, scores, &min, &max, &avg);
+	printScores(max, min, avg);
 	return 0;
 }
