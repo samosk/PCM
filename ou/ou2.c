@@ -26,7 +26,7 @@ int get_judges(void)
 	do {
 		printf("Number of judges (min 3 and max 10 judges)? ");
 		scanf("%d", &judges);
-	} while (!(judges >= 3 && judges <= 10));
+	} while (!(judges >= 3 && judges <= 10)); //while within the given span
 	printf("\n");
 	return judges;
 }
@@ -52,13 +52,13 @@ void print_loaded_scores(int judges, double scores[])
 	
 }
 
-//gets the scores and calculates the min, max and avg scores
+//calculates the min, max and avg scores from the judges
 //DATA IN: number of judges, the array of scores, the min, max, and avg scores
 void calc_scores(int judges, double scores[], double *min_score, double *max_score, double *avg)
 {
 	int i;
 	double sum = 0;
-	double min_max_sum = 0;
+	double min_max_sum = 0; //the sum of both extreme values
 	*min_score = scores[0];
 	*max_score = scores[0];
 	
