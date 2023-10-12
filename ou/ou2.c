@@ -49,7 +49,6 @@ void print_loaded_scores(int judges, double scores[])
 	for (int i = 0; i < judges; i++) {
 		printf("Judge %d: %.1lf\n", i + 1, scores[i]);
 	}
-	
 }
 
 //calculates the min, max and avg scores from the judges
@@ -72,6 +71,7 @@ void calc_scores(int judges, double scores[], double *min_score, double *max_sco
 		}
 		sum = sum + scores[i];
 	}
+
 	min_max_sum = *max_score + *min_score;
 	sum = sum - min_max_sum;
 	*avg = sum / (judges-2);
@@ -97,10 +97,16 @@ int main(void)
 	print_start_info();
 
 	judges = get_judges();
+
 	double scores[judges];
+
 	read_scores(judges, scores);
+
 	print_loaded_scores(judges, scores);
+
 	calc_scores(judges, scores, &min, &max, &avg);
+
 	print_scores(min, max, avg);
+
 	return 0;
 }
