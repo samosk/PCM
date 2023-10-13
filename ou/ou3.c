@@ -51,6 +51,15 @@ int adjacent(const int rows, const int cols, cell world[rows][cols])
 	int i = 19;
 	int a = 0;
 	int sum = 0;
+
+	for (int r = 0; r < rows; r++)
+	{
+		for (int c = 0; c < cols; c++)
+		{
+			world[r][c].current = DEAD;
+		}
+	}
+
 	for(int x = 0; x < i; x++)
 	{
 		if (world[a - 1][i].current == ALIVE)
