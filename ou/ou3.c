@@ -47,56 +47,101 @@ int adjacent(const int rows, const int cols, cell world[rows][cols])
 {
 	// in: kordinater från cell
 	// mål: räkna antalet levande grannar
-	// ut: avgör om om cellen ska leva
-	int i = 19;
-	int a = 0;
+	// int c = 19;
+	// int r = 0;
 	int sum = 0;
-
+	if (world[rows - 1][cols].current == ALIVE)
+	{
+		sum++;
+	}
+	if (world[rows][cols - 1].current == ALIVE)
+	{
+		sum++;
+	}
+	if (world[rows - 1][cols - 1].current == ALIVE)
+	{
+		sum++;
+	}
+	if (world[rows - 1][cols + 1].current == ALIVE)
+	{
+		sum++;
+	}
+	if (world[rows + 1][cols - 1].current == ALIVE)
+	{
+		sum++;
+	}
+	if (world[rows + 1][cols].current == ALIVE)
+	{
+		sum++;
+	}
+	if (world[rows][cols + 1].current == ALIVE)
+	{
+		sum++;
+	}
+	if (world[rows + 1][cols + 1].current == ALIVE)
+	{
+		sum++;
+	}
+	return sum;
+}
+// passes over each cell, checks adjacent cells
+void pass(const int rows, const int cols, cell world[rows][cols])
+{
+	int num;
 	for (int r = 0; r < rows; r++)
 	{
 		for (int c = 0; c < cols; c++)
 		{
-			world[r][c].current = DEAD;
-		}
-	}
+			num = adjacent(r, c, world);
+			if (num == 1 || num == 0)
+			{
+				world[r][c].next = DEAD;
+			}
+			if (num == 2 || num == 3)
+			{
+				world[r][c].next = ALIVE;
+			}
+			if (num >= 4)
+			{
+				world[r][c].next = DEAD;
+			}
+			if (world[r][c].current == DEAD && num == 3)
+			{
+				world[r][c].next = ALIVE;
+			}
+			printf("%c ", world[r][c].next);
 
-	for(int x = 0; x < i; x++)
-	{
-		if (world[a - 1][i].current == ALIVE)
-		{
-			sum++;
 		}
-		if (world[a][i - 1].current == ALIVE)
-		{
-			sum++;
-		}
-		if (world[a - 1][i - 1].current == ALIVE)
-		{
-			sum++;
-		}
-		if (world[a - 1][i + 1].current == ALIVE)
-		{
-			sum++;
-		}
-		if (world[a + 1][i - 1].current == ALIVE)
-		{
-			sum++;
-		}
-		if (world[a + 1][i].current == ALIVE)
-		{
-			sum++;
-		}
-		if (world[a][i + 1].current == ALIVE)
-		{
-			sum++;
-		}
-		if (world[a + 1][i + 1].current == ALIVE)
-		{
-			sum++;
-		}
-		
+		printf("\n");
+
 	}
-	return sum;
+	// for (int r = 0; r < rows; r++)
+	// {
+	// 	for (int c = 0; c < cols; c++)
+	// 	{
+	// 		printf("%c ", world[r][c].next);
+	// 	}
+	// 	printf("\n");
+	// }
+}
+void next_gen(const int rows, const int cols, cell world[rows][cols])
+{
+	char input;
+	// while (true)
+	// {
+	// 	input = fgetc(stdin);
+	// 	if (input == 0x0A)
+	// 	{
+	// 		pass(rows, cols, world);
+	// 		break;
+	// 	}
+	// }
+
+	do
+	{
+		input = fgetc(stdin);
+		pass(rows, cols, world);
+	} while (input == 0x0A);
 	
 }
 /* Function: get_start_state
@@ -262,8 +307,8 @@ int main(void)
 	const int columns = 20;
 	cell w[rows][columns];
 	init_world(rows, columns, w);
-	int ad = adjacent(rows, columns, w);
-	printf("%d \n", ad);
+	// int ad = adjacent(rows, columns, w);
+	// printf("%d \n", ad);
 
 	for (int i = 0; i < rows; i++)
 	{
@@ -273,6 +318,7 @@ int main(void)
 		}
 		printf("\n");
 	}
+	next_gen(rows, columns, w);
 
 	return 0;
 }
