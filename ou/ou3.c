@@ -176,6 +176,11 @@ void next_gen(const int rows, const int cols, cell world[rows][cols])
 	{
 		printf("Choose input: \n");
 		input = fgetc(stdin);
+		if (input != 0x0A)
+		{
+			break;
+		}
+		
 		pass(rows, cols, world);
 		for (int r = 0; r < rows; r++)
 		{
