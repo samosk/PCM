@@ -52,42 +52,66 @@ int adjacent(const int rows, const int cols, cell world[rows][cols])
 	int sum = 0;
 	if (world[rows - 1][cols].current == ALIVE)
 	{
-		sum++;
+		if ((rows - 1) >= 0)
+		{
+			sum++;
+		}
 	}
 	if (world[rows][cols - 1].current == ALIVE)
 	{
-		sum++;
+		if ((cols - 1) >= 0)
+		{
+			sum++;
+		}
 	}
 	if (world[rows - 1][cols - 1].current == ALIVE)
 	{
-		sum++;
+		if (((rows - 1) >= 0) && ((cols - 1) >= 0))
+		{
+			sum++;
+		}
 	}
 	if (world[rows - 1][cols + 1].current == ALIVE)
 	{
-		sum++;
+		if (((rows - 1) >= 0) && ((cols + 1) < 20))
+		{
+			sum++;
+		}
 	}
 	if (world[rows + 1][cols - 1].current == ALIVE)
 	{
-		sum++;
+		if (((rows + 1) < 20) && ((cols - 1) >= 0))
+		{
+			sum++;
+		}
 	}
 	if (world[rows + 1][cols].current == ALIVE)
 	{
-		sum++;
+		if ((rows + 1) < 20)
+		{
+			sum++;
+		}
 	}
 	if (world[rows][cols + 1].current == ALIVE)
 	{
-		sum++;
+		if ((cols + 1) < 20)
+		{
+			sum++;
+		}
 	}
 	if (world[rows + 1][cols + 1].current == ALIVE)
 	{
-		sum++;
+		if (((rows + 1) < 20) && ((cols + 1) < 20))
+		{
+			sum++;
+		}
 	}
 	return sum;
 }
 // passes over each cell, checks adjacent cells
 void pass(const int rows, const int cols, cell world[rows][cols])
 {
-	int num;
+	int num = 0;
 	for (int r = 0; r < rows; r++)
 	{
 		for (int c = 0; c < cols; c++)
@@ -109,11 +133,9 @@ void pass(const int rows, const int cols, cell world[rows][cols])
 			{
 				world[r][c].next = ALIVE;
 			}
-			printf("%c ", world[r][c].next);
-
+			// printf("%c ", world[r][c].next);
 		}
-		printf("\n");
-
+		// printf("\n");
 	}
 	// for (int r = 0; r < rows; r++)
 	// {
@@ -126,23 +148,46 @@ void pass(const int rows, const int cols, cell world[rows][cols])
 }
 void next_gen(const int rows, const int cols, cell world[rows][cols])
 {
-	char input;
-	// while (true)
+
+	// bool repeat = true;
+	// while (repeat == true)
 	// {
 	// 	input = fgetc(stdin);
 	// 	if (input == 0x0A)
 	// 	{
 	// 		pass(rows, cols, world);
-	// 		break;
+	// 		repeat = true;
+	// 	} else {
+	// 		repeat = false;
 	// 	}
 	// }
+	// int i = 0;
+	// char input[i];
+	// do
+	// {
 
+	// 	printf("Choose input: \n");
+	// 	input[i] = fgetc(stdin);
+	// 	pass(rows, cols, world);
+	// 	i++;
+	// } while (input[i-1] == 0x0A);
+	char input;
 	do
 	{
+		printf("Choose input: \n");
 		input = fgetc(stdin);
 		pass(rows, cols, world);
+		for (int r = 0; r < rows; r++)
+		{
+			for (int c = 0; c < cols; c++)
+			{
+				printf("%c ", world[r][c].next);
+				world[r][c].current = world[r][c].next;
+			}
+			printf("\n");
+		}
+
 	} while (input == 0x0A);
-	
 }
 /* Function: get_start_state
  * Description: Lets the user choose starting state
