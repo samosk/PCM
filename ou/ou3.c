@@ -43,65 +43,64 @@ char is_alive()
 	}
 }
 
-int adjacent(const int rows, const int cols, cell world[rows][cols])
+int adjacent(const int rows, const int cols, cell world[rows][cols], int r, int c)
 {
 	// in: kordinater från cell
 	// mål: räkna antalet levande grannar
-	// int c = 19;
-	// int r = 0;
+	
 	int sum = 0;
-	if (world[rows - 1][cols].current == ALIVE)
+	if (world[r - 1][c].current == ALIVE)
 	{
-		if ((rows - 1) >= 0)
+		if (((r - 1) >= 0) && ((c) >= 0) && ((r - 1) < 20) && ((c) < 20))
 		{
 			sum++;
 		}
 	}
-	if (world[rows][cols - 1].current == ALIVE)
+	if (world[r][c - 1].current == ALIVE)
 	{
-		if ((cols - 1) >= 0)
+		if (((c - 1) >= 0) && ((r) >= 0) && ((c - 1) < 20) && ((r) < 20))
 		{
 			sum++;
 		}
 	}
-	if (world[rows - 1][cols - 1].current == ALIVE)
+	if (world[r - 1][c - 1].current == ALIVE)
 	{
-		if (((rows - 1) >= 0) && ((cols - 1) >= 0))
+		if (((r - 1) >= 0) && ((c - 1) >= 0) && ((r - 1) < 20) && ((c - 1) < 20))
 		{
 			sum++;
 		}
 	}
-	if (world[rows - 1][cols + 1].current == ALIVE)
+	if (world[r - 1][c + 1].current == ALIVE)
 	{
-		if (((rows - 1) >= 0) && ((cols + 1) < 20))
+		if (((r - 1) >= 0) && ((c + 1) >= 0) && ((r - 1) < 20) && ((c + 1) < 20))
 		{
 			sum++;
 		}
 	}
-	if (world[rows + 1][cols - 1].current == ALIVE)
+	if (world[r + 1][c - 1].current == ALIVE)
 	{
-		if (((rows + 1) < 20) && ((cols - 1) >= 0))
+		if (((r + 1) >= 0) && ((c - 1) >= 0) && ((r + 1) < 20) && ((c - 1) < 20))
 		{
 			sum++;
 		}
 	}
-	if (world[rows + 1][cols].current == ALIVE)
+	if (world[r + 1][c].current == ALIVE)
 	{
-		if ((rows + 1) < 20)
+		if (((r + 1) >= 0) && ((c) >= 0) && ((r + 1) < 20) && ((c) < 20))
 		{
 			sum++;
 		}
 	}
-	if (world[rows][cols + 1].current == ALIVE)
+	if (world[r][c + 1].current == ALIVE)
 	{
-		if ((cols + 1) < 20)
+		if (((c + 1) >= 0) && ((r) >= 0) && ((c + 1) < 20) && ((r) < 20))
 		{
 			sum++;
 		}
 	}
-	if (world[rows + 1][cols + 1].current == ALIVE)
+	if (world[r + 1][c + 1].current == ALIVE)
 	{
-		if (((rows + 1) < 20) && ((cols + 1) < 20))
+		if (((r + 1) >= 0) && ((c + 1) >= 0) && ((r + 1) < 20) && ((c + 1) < 20))
 		{
 			sum++;
 		}
@@ -111,17 +110,24 @@ int adjacent(const int rows, const int cols, cell world[rows][cols])
 // passes over each cell, checks adjacent cells
 void pass(const int rows, const int cols, cell world[rows][cols])
 {
-	int num = 0;
 	for (int r = 0; r < rows; r++)
 	{
 		for (int c = 0; c < cols; c++)
 		{
-			num = adjacent(r, c, world);
-			if (num == 1 || num == 0)
+			int num = adjacent(rows, cols, world, r, c);
+			if (num == 0)
 			{
 				world[r][c].next = DEAD;
 			}
-			if (num == 2 || num == 3)
+			if (num == 1)
+			{
+				world[r][c].next = DEAD;
+			}
+			if (num == 2)
+			{
+				world[r][c].next = ALIVE;
+			}
+			if (num == 3)
 			{
 				world[r][c].next = ALIVE;
 			}
@@ -129,11 +135,14 @@ void pass(const int rows, const int cols, cell world[rows][cols])
 			{
 				world[r][c].next = DEAD;
 			}
+			if (world[r][c].current == DEAD)
+			{
+				world[r][c].next = DEAD;
+			}
 			if (world[r][c].current == DEAD && num == 3)
 			{
 				world[r][c].next = ALIVE;
-			}
-			// printf("%c ", world[r][c].next);
+			}			
 		}
 		// printf("\n");
 	}
@@ -148,29 +157,6 @@ void pass(const int rows, const int cols, cell world[rows][cols])
 }
 void next_gen(const int rows, const int cols, cell world[rows][cols])
 {
-
-	// bool repeat = true;
-	// while (repeat == true)
-	// {
-	// 	input = fgetc(stdin);
-	// 	if (input == 0x0A)
-	// 	{
-	// 		pass(rows, cols, world);
-	// 		repeat = true;
-	// 	} else {
-	// 		repeat = false;
-	// 	}
-	// }
-	// int i = 0;
-	// char input[i];
-	// do
-	// {
-
-	// 	printf("Choose input: \n");
-	// 	input[i] = fgetc(stdin);
-	// 	pass(rows, cols, world);
-	// 	i++;
-	// } while (input[i-1] == 0x0A);
 	char input;
 	do
 	{
@@ -180,7 +166,7 @@ void next_gen(const int rows, const int cols, cell world[rows][cols])
 		{
 			break;
 		}
-		
+
 		pass(rows, cols, world);
 		for (int r = 0; r < rows; r++)
 		{
@@ -360,11 +346,11 @@ int main(void)
 	// int ad = adjacent(rows, columns, w);
 	// printf("%d \n", ad);
 
-	for (int i = 0; i < rows; i++)
+	for (int r = 0; r < rows; r++)
 	{
-		for (int a = 0; a < columns; a++)
+		for (int c = 0; c < columns; c++)
 		{
-			printf("%c ", w[i][a].current);
+			printf("%c ", w[r][c].current);
 		}
 		printf("\n");
 	}
