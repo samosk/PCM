@@ -26,6 +26,7 @@ typedef struct
 	char current;
 	char next;
 } cell;
+
 /* Function: is_alive
  * Description: Used for the random starting state
  * Input: None
@@ -35,7 +36,6 @@ char is_alive()
 {
 	int rand();
 	int value = rand();
-
 	if ((value % 2) == 0)
 	{
 		return ALIVE;
@@ -58,10 +58,10 @@ int adjacent(const int rows, const int cols, cell world[rows][cols], int r, int 
 	{
 		for (int j = -1; j <= 1; j++)
 		{
-			if (i != 0 || j != 0)
+			if (i != 0 || j != 0) //don't count the current cell
 			{
-				int newRow = r + i; //current coordinate with the change of i, either +1 or -1
-				int newCol = c + j; // --||--
+				int newRow = r + i; // current coordinate with the change of i, either +1 or -1
+				int newCol = c + j; // current coordinate with the change of j, either +1 or -1
 				if (newRow >= 0 && newRow < 20 && newCol >= 0 && newCol < 20 && world[newRow][newCol].current == ALIVE)
 				{
 					sum++;
@@ -69,9 +69,9 @@ int adjacent(const int rows, const int cols, cell world[rows][cols], int r, int 
 			}
 		}
 	}
-
 	return sum;
 }
+
 /* Function: pass
  * Description: Passes over each cell, checks adjacent cells
  * Input: The number of rows and columns and the world for the cells
@@ -84,6 +84,7 @@ void pass(const int rows, const int cols, cell world[rows][cols])
 		for (int c = 0; c < cols; c++)
 		{
 			int num = adjacent(rows, cols, world, r, c);
+			//apply rules for next generations cells
 			if (num == 0 || num == 1 || num >= 4)
 			{
 				world[r][c].next = DEAD;
@@ -103,6 +104,7 @@ void pass(const int rows, const int cols, cell world[rows][cols])
 		}
 	}
 }
+
 /* Function: print_start_world
  * Description: Prints the initial version of the world
  * Input: The number of rows and columns and the world for the cells
@@ -119,6 +121,7 @@ void print_start_world(const int rows, const int cols, cell world[rows][cols])
 		printf("\n");
 	}
 }
+
 /* Function: next_gen
  * Description: Creates the next generation of cells
  * Input: The number of rows and columns and the world for the cells
@@ -139,20 +142,19 @@ void next_gen(const int rows, const int cols, cell world[rows][cols])
 			break;
 		}
 		pass(rows, cols, world);
+		//loop over every cell, print next generation
 		for (int r = 0; r < rows; r++)
 		{
-
 			for (int c = 0; c < cols; c++)
 			{
-
 				printf("%c ", world[r][c].next);
 				world[r][c].current = world[r][c].next;
 			}
 			printf("\n");
 		}
-
 	} while (input == '\n');
 }
+
 /* Function: get_start_state
  * Description: Lets the user choose starting state
  * Input: None.
@@ -171,6 +173,7 @@ char get_start_state(void)
 	}
 	return ch;
 }
+
 /* Function: clear_world
  * Description: Initialize all the cells in the world to dead
  * Input: rows - the number of rows in the world
@@ -188,6 +191,7 @@ void clear_world(const int rows, const int cols, cell world[rows][cols])
 		}
 	}
 }
+
 /* Function: load_glider
  * Description: Inserts a glider into the world.
  * Input: rows - the number of rows in the world
@@ -203,6 +207,7 @@ void load_glider(const int rows, const int cols, cell world[rows][cols])
 	world[2][1].current = ALIVE;
 	world[2][2].current = ALIVE;
 }
+
 /* Function: load_semaphore
  * Description: Inserts a semaphore into the world.
  * Input: rows - the number of rows in the world
@@ -216,6 +221,7 @@ void load_semaphore(const int rows, const int cols, cell world[rows][cols])
 	world[8][2].current = ALIVE;
 	world[8][3].current = ALIVE;
 }
+
 /* Function: load_random_state
  * Description: Inserts a random structure into the world.
  * Input: rows - the number of rows in the world
@@ -234,6 +240,7 @@ void load_random_state(const int rows, const int cols, cell world[rows][cols])
 		}
 	}
 }
+
 /* Function: load_custom_state
  * Description: Lets the user specify a structure that then is inserted into
  * the world.
@@ -268,6 +275,7 @@ void load_custom_state(const int rows, const int cols, cell world[rows][cols])
 		}
 	} while (sc != NULL);
 }
+
 /* Function: init_world
  * Description: Loads a structure that the user selects
  * Input: rows - the number of rows in the world
@@ -301,6 +309,7 @@ void init_world(const int rows, const int cols, cell world[rows][cols])
 		break;
 	}
 }
+
 /* Function: main
  * Description: Start and run simulations, interact with the user.
  * Lets the user choose initial structure and whether to step
