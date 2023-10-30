@@ -50,7 +50,7 @@ char is_alive()
 	}
 }
 
-/* Function:    adjacent
+/* Function:    num_alive_neighbours
  * Description: Calculates how many adjacent cells are alive
  * Input:       rows - the number of rows in the world
  *              cols - the number of columns in the world
@@ -59,7 +59,7 @@ char is_alive()
  *              c - the coordinate in the columns
  * Output:      The number of adjacent cells that are alive within the given span
  */
-int adjacent(const int rows, const int cols, cell world[rows][cols], int r, int c)
+int num_alive_neighbours(const int rows, const int cols, cell world[rows][cols], int r, int c)
 {
 	int sum = 0;
 	for (int i = -1; i <= 1; i++) {
@@ -79,18 +79,18 @@ int adjacent(const int rows, const int cols, cell world[rows][cols], int r, int 
 	return sum;
 }
 
-/* Function:    pass
- * Description: Passes over each cell, checks adjacent cells
+/* Function:    calc_next_gen
+ * Description: Passes over each cell, apply ruleset for next generation
  * Input:       rows - the number of rows in the world
  *              cols - the number of columns in the world
  *              world - the array representing the world
  * Output:      None
  */
-void pass(const int rows, const int cols, cell world[rows][cols])
+void calc_next_gen(const int rows, const int cols, cell world[rows][cols])
 {
 	for (int r = 0; r < rows; r++) {
 		for (int c = 0; c < cols; c++) {
-			int num = adjacent(rows, cols, world, r, c);
+			int num = num_alive_neighbours(rows, cols, world, r, c);
 			//apply rules for next generations cells
 			if (num == 0 || num == 1 || num >= 4) {
 				world[r][c].next = DEAD;
@@ -125,35 +125,22 @@ void print_start_world(const int rows, const int cols, cell world[rows][cols])
 	}
 }
 
-/* Function:    next_gen
- * Description: Creates the next generation of cells
+/* Function:    print_next_gen
+ * Description: Prints the next generation of cells
  * Input:       rows - the number of rows in the world
  *              cols - the number of columns in the world
  *              world - the array representing the world
- * Output:      The world array is updated.
+ * Output:      None
  */
-void next_gen(const int rows, const int cols, cell world[rows][cols])
+void print_next_gen(const int rows, const int cols, cell world[rows][cols])
 {
-	char input;
-	do {
-		printf(
-			"Select one of the following options: \n"
-			"(enter) Step\n"
-			"(any) Exit\n");
-		input = getchar();
-		if (input != '\n') {
-			break;
-		}
-		pass(rows, cols, world);
-		//loop over every cell, print next generation
-		for (int r = 0; r < rows; r++) {
+	for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < cols; c++) {
 				printf("%c ", world[r][c].next);
 				world[r][c].current = world[r][c].next;
 			}
 			printf("\n");
 		}
-	} while (input == '\n');
 }
 
 /* Function:    get_start_state
@@ -326,6 +313,19 @@ int main(void)
 	cell w[rows][columns];
 	init_world(rows, columns, w);
 	print_start_world(rows, columns, w);
-	next_gen(rows, columns, w);
+	char input;
+	do {
+		printf(
+			"Select one of the following options: \n"
+			"(enter) Step\n"
+			"(any) Exit\n");
+		input = getchar();
+		if (input != '\n') {
+			break;
+		}
+		calc_next_gen(rows, columns, w);
+		//loop over every cell, print next generation
+		print_next_gen(rows,columns,w);
+	} while (input == '\n');
 	return 0;
 }
